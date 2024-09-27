@@ -1,0 +1,58 @@
+
+services:
+  # Serviço da aplicação Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Projeto-Final-Backend/Dockerfile
+    container_name: springboot-app
+    ports:
+      - "8080:8080"  # Mapeia a porta do container para a porta local
+    depends_on:
+      - postgres  # Garante que o PostgreSQL esteja rodando antes de a aplicação iniciar
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recursos_hidricos
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    networks:
+      - springboot-network
+
+  # Serviço do banco de dados PostgreSQL
+  postgres:
+    image: postgres:16  # Use a versão desejada do PostgreSQL
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: recursos_hidricos  # Nome do banco de dados a ser criado
+      POSTGRES_USER: postgres  # Usuário padrão
+      POSTGRES_PASSWORD: postgres  # Senha padrão
+    ports:
+      - "5440:5432"  # Mapeia a porta do PostgreSQL
+    volumes:
+      - postgres-data:/var/lib/postgresql/data 
+      - ./Projeto-Final-Backend/src/main/resources/script_banco.sql:/docker-entrypoint-initdb.d/init.sql  # Montando o script SQL
+    
+    networks:
+      - springboot-network
+
+  # frontend:
+  #   image: node:20-alpine
+  #   container_name: vuejs-frontend
+  #   ports:
+  #     - "8081:8081"
+  #   volumes:
+  #     - ./Projeto-Final-Frontend:/app
+  #   working_dir: /app
+  #   command: 
+  #    - npm install g
+  #    - npm run dev
+  #   networks:
+  #     - springboot-network
+
+# Rede para comunicação entre os containers
+networks:
+  springboot-network:
+    driver: bridge
+
+# Volume para armazenar os dados do PostgreSQL
+volumes:
+  postgres-data:
