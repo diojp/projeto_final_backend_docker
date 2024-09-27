@@ -1,5 +1,5 @@
 
-# Projeto final da PÓS-GRADUAÇÃO EM DESENVOLVIMENTO WEB FULL STACK
+# Projeto final da PÓS-GRADUAÇÃO EM DESENVOLVIMENTO WEB FULL STACK - Versão em Docker
 # * Backend
 
 O Projeto consiste na criação de um sistema web voltado o cálculo automático de Dimensionamento e Balanço Hídrico de Açudes.
